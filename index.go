@@ -12,12 +12,12 @@ import (
 )
 
 const (
-	DBHost  = "127.0.0.1"
-	DBPort  = ":3306"
-	DBUser  = "root"
-	DBPass  = "1989"
-	DBDbase = "cms"
-	PORT    = ":8080"
+	DBHost  =
+	DBPort  =
+	DBUser  =
+	DBPass  =
+	DBDbase =
+	PORT    =
 )
 
 var database *sql.DB
