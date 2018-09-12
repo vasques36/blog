@@ -42,35 +42,19 @@ func (p Page) Count() int {
     return len(p.Content)
 }
 
-func ServeTitle(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	pageGUID := vars["guid"]
-	thisPage := Page{}
-	fmt.Println(pageGUID)
 
-	err := database.QueryRow("SELECT page_title,page_content, page_date FROM pages WHERE page_guid=?", pageGUID).Scan(&thisPage.Title, &thisPage.Content, &thisPage.Date)
-	if err != nil {
-		http.Error(w, http.StatusText(404), http.StatusNotFound)
-		log.Println("Couldn't get page!")
-		return
-	}
-	// html := `<html><head><title>` + thisPage.Title + `</title></head><body><h1>` + thisPage.Title + `</h1><div>` + thisPage.Content + `</div></body></html>`
-
-	t, _ := template.ParseFiles("templates/title.html")
-	t.Execute(w, thisPage)
-}
 func ServePage(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	pageGUID := vars["guid"]
 	thisPage := Page{}
 	fmt.Println(pageGUID)
-	err := database.QueryRow("SELECT page_title,page_content,page_date FROM pages WHERE page_guid=?", pageGUID).Scan(&thisPage.Title, &thisPage.Content, &thisPage.Date)
+	err := database.QueryRow("SELECT page_title,page_content,page_date,page_guid FROM pages WHERE page_guid=?", pageGUID).
+    Scan(&thisPage.Title, &thisPage.Content, &thisPage.Date,&thisPage.GUID)
 	if err != nil {
 		http.Error(w, http.StatusText(404), http.StatusNotFound)
 		log.Println("Couldn't get page!")
 		return
 	}
-	// html := `<html><head><title>` + thisPage.Title + `</title></head><body><h1>` + thisPage.Title + `</h1><div>` + thisPage.Content + `</div></body></html>`
 
 	t, _ := template.ParseFiles("templates/blog.html")
 	t.Execute(w, thisPage)
@@ -94,7 +78,6 @@ func ServeIndex(w http.ResponseWriter, r *http.Request) {
 
 }
 
-
 func main() {
 
     pass := os.Getenv("DB_PASS")
@@ -108,11 +91,30 @@ func main() {
 	database = db
 
 	routes := mux.NewRouter()
-	routes.HandleFunc("/title/{guid:[0-9a-zA\\-]+}", ServeTitle)
 	routes.HandleFunc("/page/{guid:[0-9a-zA\\-]+}", ServePage)
     routes.HandleFunc("/home" , ServeIndex)
     routes.HandleFunc("/", RedirIndex)
 	http.Handle("/", routes)
+    http.ListenAndServe(PORT, nil)
 
-	http.ListenAndServe(PORT, nil)
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
