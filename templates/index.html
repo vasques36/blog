@@ -1,0 +1,8 @@
+<h1> HomePages Welcome </h1>
+
+{{range .}}
+<div><a href="/page/{{.GUID}}">{{.Title}}</a></div>
+<div>{{.TruncatedText}}</div>
+<div>{{.Count}}</div>
+<div>{{.Date}}</div>
+{{end}}
