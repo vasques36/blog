@@ -9,15 +9,14 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+    "os"
 )
-
 const (
-	DBHost  =
-	DBPort  =
-	DBUser  =
-	DBPass  =
-	DBDbase =
-	PORT    =
+	DBHost  = "127.0.0.1"
+    DBPort  = ":3306"
+	DBUser  = "root"
+	DBDbase = "cms"
+    PORT    = ":8080"
 )
 
 var database *sql.DB
@@ -97,7 +96,9 @@ func ServeIndex(w http.ResponseWriter, r *http.Request) {
 
 
 func main() {
-	dbConn := fmt.Sprintf("%s:%s@/%s", DBUser, DBPass, DBDbase)
+
+    pass := os.Getenv("DB_PASS")
+    dbConn := fmt.Sprintf("%s:%s@/%s", DBUser, pass, DBDbase)
 	fmt.Println(dbConn)
 	db, err := sql.Open("mysql", dbConn)
 	if err != nil {
