@@ -1,5 +1,22 @@
 <html>
 <head>
+<script>
+function putComment(el) {
+var id = $(el).find('.edit_id');
+var name = $(el).find('.edit_name').val();
+var email = $(el).find('.edit_email').val();
+var text = $(el).find('.edit_comments').val();
+$.ajax({
+url: '/api/comments/' + id,
+type: 'PUT',
+succes: function(res) {
+    alert('Comment Updated!');
+}
+});
+return false;
+}
+</script>
+
 <title>{{.Title}}</title>
 </head>
 <body>
@@ -10,5 +27,53 @@
 <div>{{.Date}}</div>
 <div> {{.GUID}}</div>
 <div>{{.Title}}</div>
+<h1>Commnets </h1>
+<div id="comments">
+<form action="/api/comments" method="POST">
+
+<input type="hidden" name="guid" value="{{.GUID}}" />
+<div>
+
+<input type="text" name="name" placeholder="Your Name" />
+</div>
+
+<div>
+<input type="email" name="email" placeholder="Your Email" />
+</div>
+
+<div>
+<textarea name="comments" placeholder="Your Comments"></textarea>
+</div>
+
+<div>
+<input type="submit" value="Add Comments" />
+</div>
+
+</form>
+<h1>Re Comments </h1>
+{{range .Comments}}
+<div class="comment">
+<div>Comment by {{.Name}} ({{.Email}})</div>
+{{.CommentText}}
+<div class="comment_edit">
+<h2>Edit</h2>
+
+<form onsubmit="return putComment(this);">
+
+<input type="hidden" class="edit_id" value="{{.Id}}" />
+
+<input type="text" name="name" class="edit_name" placeholder="Your Name" value="{{.Name}}" />
+<input type="text" name="email" class="edit_email" placeholder="Your Email" value="{{.Email}}" />
+
+<textarea class="edit_comments" name="comments">{{.CommentText}}</textarea>
+
+<input type="submit" value="Edit" />
+
+</form>
+</div>
+</div>
+{{end}}
+
+</div>
 </body>
 </html>
