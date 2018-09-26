@@ -176,8 +176,8 @@ func main() {
     routes.HandleFunc("/api/page/{id:[\\w\\d\\-]+}", APIPage).
         Methods("GET").
         Schemes("http")
-    routes.HandleFunc("/api/comments", APICommentPost).
-        Methods("POST")
+    routes.HandleFunc("/api/comments", APIPage).
+        Methods("GET")
 	routes.HandleFunc("/page/{guid:[0-9a-zA\\-]+}", ServePage)
     routes.HandleFunc("/home" , ServeIndex)
     routes.HandleFunc("/", RedirIndex)
